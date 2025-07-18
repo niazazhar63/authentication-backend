@@ -44,6 +44,18 @@ async function run() {
 
 
 
+    // get all users here 
+    app.get("/users", async(req, res)=>{
+      try {
+        const users = await userCollection.find().toArray();
+        res.status(200).send(users)
+      } catch (error) {
+        console.log("Failed to fetch users", error)
+        res.status(500).send({message: "users not found"})
+      }
+    })
+
+
 
 
 
