@@ -21,8 +21,38 @@ const client = new MongoClient(uri, {
 });
 
 async function run() {
+  
+
   try {
     await client.connect();
+
+    const userCollection = client.db("AuthenticationDB").collection("Users")
+
+    // set users on db 
+    app.post("/users", async(req, res)=>{
+
+      // insert user email if user doesnt exist 
+      const query = {email : req.body.email}
+      const existingUser = await userCollection.findOne(query)
+      if(existingUser){
+        return res.send({message: "User Already exist", insertedId: null})
+      }
+      const user = req.body
+      const result = await userCollection.insertOne(user)
+      res.send({success : true})
+    })
+
+
+
+
+
+
+
+
+
+
+
+    
     await client.db("admin").command({ ping: 1 });
     console.log("✅  MongoDB connected");
   } catch (err) {
